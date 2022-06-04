@@ -38,7 +38,7 @@ abstract contract ONFT721Core is NonblockingLzApp, ERC165, IONFT721Core {
         (bytes memory toAddressBytes, uint tokenId) = abi.decode(_payload, (bytes, uint));
         address toAddress;
         assembly {
-            toAddress := mload(add(toAddressBytes, 20))
+            toAddress := mload(add(toAddressBytes, 32))
         }
 
         _creditTo(_srcChainId, toAddress, tokenId);
