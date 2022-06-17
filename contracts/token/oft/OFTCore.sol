@@ -31,13 +31,13 @@ abstract contract OFTCore is NonblockingLzApp, ERC165, IOFTCore {
             toAddress := mload(add(toAddressBytes, 20))
         }
 
-        _creditTo(_srcChainId, toAddress, amount);
+        amount = _creditTo(_srcChainId, toAddress, amount);
 
         emit ReceiveFromChain(_srcChainId, _srcAddress, toAddress, amount, _nonce);
     }
 
     function _send(address _from, uint16 _dstChainId, bytes memory _toAddress, uint _amount, address payable _refundAddress, address _zroPaymentAddress, bytes memory _adapterParams) internal virtual {
-        _debitFrom(_from, _dstChainId, _toAddress, _amount);
+        _amount = _debitFrom(_from, _dstChainId, _toAddress, _amount);
 
         bytes memory payload = abi.encode(_toAddress, _amount);
         _lzSend(_dstChainId, payload, _refundAddress, _zroPaymentAddress, _adapterParams);
@@ -46,7 +46,7 @@ abstract contract OFTCore is NonblockingLzApp, ERC165, IOFTCore {
         emit SendToChain(_from, _dstChainId, _toAddress, _amount, nonce);
     }
 
-    function _debitFrom(address _from, uint16 _dstChainId, bytes memory _toAddress, uint _amount) internal virtual;
+    function _debitFrom(address _from, uint16 _dstChainId, bytes memory _toAddress, uint _amount) internal virtual returns(uint256);
 
-    function _creditTo(uint16 _srcChainId, address _toAddress, uint _amount) internal virtual;
+    function _creditTo(uint16 _srcChainId, address _toAddress, uint _amount) internal virtual returns(uint256);
 }

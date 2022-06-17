@@ -20,12 +20,14 @@ contract ProxyOFT is OFTCore {
         }
     }
 
-    function _debitFrom(address _from, uint16, bytes memory, uint _amount) internal virtual override {
+    function _debitFrom(address _from, uint16, bytes memory, uint _amount) internal virtual override returns(uint256) {
         require(_from == _msgSender(), "ProxyOFT: owner is not send caller");
         token.safeTransferFrom(_from, address(this), _amount);
+        return _amount;
     }
 
-    function _creditTo(uint16, address _toAddress, uint _amount) internal virtual override {
+    function _creditTo(uint16, address _toAddress, uint _amount) internal virtual override returns(uint256) {
         token.safeTransfer(_toAddress, _amount);
+        return _amount;
     }
 }
