@@ -7,6 +7,12 @@ import "../../lzApp/NonblockingLzApp.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 
 abstract contract ONFT1155Core is NonblockingLzApp, ERC165, IONFT1155Core {
+
+    uint public constant NO_EXTRA_GAS = 0;
+    uint public constant FUNCTION_TYPE_SEND = 1;
+    uint public constant FUNCTION_TYPE_SEND_BATCH = 2;
+    bool public useCustomAdapterParams;
+
     constructor(address _lzEndpoint) NonblockingLzApp(_lzEndpoint) {}
 
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
@@ -32,19 +38,27 @@ abstract contract ONFT1155Core is NonblockingLzApp, ERC165, IONFT1155Core {
 
     function _sendBatch(address _from, uint16 _dstChainId, bytes memory _toAddress, uint[] memory _tokenIds, uint[] memory _amounts, address payable _refundAddress, address _zroPaymentAddress, bytes memory _adapterParams) internal virtual {
         _debitFrom(_from, _dstChainId, _toAddress, _tokenIds, _amounts);
-
         bytes memory payload = abi.encode(_toAddress, _tokenIds, _amounts);
-        _lzSend(_dstChainId, payload, _refundAddress, _zroPaymentAddress, _adapterParams);
-
-        uint64 nonce = lzEndpoint.getOutboundNonce(_dstChainId, address(this));
         if (_tokenIds.length == 1) {
-            emit SendToChain(_from, _dstChainId, _toAddress, _tokenIds[0], _amounts[0], nonce);
+            if(useCustomAdapterParams) {
+                _checkGasLimit(_dstChainId, FUNCTION_TYPE_SEND, _adapterParams, NO_EXTRA_GAS);
+            } else {
+                require(_adapterParams.length == 0, "LzApp: _adapterParams must be empty.");
+            }
+            _lzSend(_dstChainId, payload, _refundAddress, _zroPaymentAddress, _adapterParams);
+            emit SendToChain(_dstChainId, _from, _toAddress, _tokenIds[0], _amounts[0]);
         } else if (_tokenIds.length > 1) {
-            emit SendBatchToChain(_from, _dstChainId, _toAddress, _tokenIds, _amounts, nonce);
+            if(useCustomAdapterParams) {
+                _checkGasLimit(_dstChainId, FUNCTION_TYPE_SEND_BATCH, _adapterParams, NO_EXTRA_GAS);
+            } else {
+                require(_adapterParams.length == 0, "LzApp: _adapterParams must be empty.");
+            }
+            _lzSend(_dstChainId, payload, _refundAddress, _zroPaymentAddress, _adapterParams);
+            emit SendBatchToChain(_dstChainId, _from, _toAddress, _tokenIds, _amounts);
         }
     }
 
-    function _nonblockingLzReceive(uint16 _srcChainId, bytes memory _srcAddress, uint64 _nonce, bytes memory _payload) internal virtual override {
+    function _nonblockingLzReceive(uint16 _srcChainId, bytes memory _srcAddress, uint64 /*_nonce*/, bytes memory _payload) internal virtual override {
         // decode and load the toAddress
         (bytes memory toAddressBytes, uint[] memory tokenIds, uint[] memory amounts) = abi.decode(_payload, (bytes, uint[], uint[]));
         address toAddress;
@@ -55,10 +69,14 @@ abstract contract ONFT1155Core is NonblockingLzApp, ERC165, IONFT1155Core {
         _creditTo(_srcChainId, toAddress, tokenIds, amounts);
 
         if (tokenIds.length == 1) {
-            emit ReceiveFromChain(_srcChainId, _srcAddress, toAddress, tokenIds[0], amounts[0], _nonce);
+            emit ReceiveFromChain(_srcChainId, _srcAddress, toAddress, tokenIds[0], amounts[0]);
         } else if (tokenIds.length > 1) {
-            emit ReceiveBatchFromChain(_srcChainId, _srcAddress, toAddress, tokenIds, amounts, _nonce);
+            emit ReceiveBatchFromChain(_srcChainId, _srcAddress, toAddress, tokenIds, amounts);
         }
+    }
+
+    function setUseCustomAdapterParams(bool _useCustomAdapterParams) external onlyOwner {
+        useCustomAdapterParams = _useCustomAdapterParams;
     }
 
     function _debitFrom(address _from, uint16 _dstChainId, bytes memory _toAddress, uint[] memory _tokenIds, uint[] memory _amounts) internal virtual;

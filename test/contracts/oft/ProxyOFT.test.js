@@ -9,12 +9,13 @@ describe("ProxyOFT: ", function () {
     const symbol = "ONFT"
 
     let owner, warlock, lzEndpointMockA, lzEndpointMockB, lzEndpointMockC
-    let OFT_B, OFT_C, LZEndpointMock, OFT, ERC20, ERC20Src, ProxyOFT_A, ProxyOFT
+    let OFT_B, OFT_C, LZEndpointMock, OFT, ERC20, ERC20Src, ProxyOFT_A, ProxyOFT, LzLibFactory, lzLib
 
     before(async function () {
         owner = (await ethers.getSigners())[0]
         warlock = (await ethers.getSigners())[1]
-
+        LzLibFactory = await ethers.getContractFactory("LzLib")
+        lzLib = await LzLibFactory.deploy();
         LZEndpointMock = await ethers.getContractFactory("LZEndpointMock")
         OFT = await ethers.getContractFactory("OFT")
         ProxyOFT = await ethers.getContractFactory("ProxyOFT")

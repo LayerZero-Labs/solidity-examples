@@ -9,12 +9,13 @@ describe("ProxyONFT721: ", function () {
     const symbol = "ONFT"
 
     let owner, warlock, lzEndpointMockA, lzEndpointMockB, lzEndpointMockC
-    let ONFT_B, ONFT_C, LZEndpointMock, ONFT, ERC721, ERC721Src, ProxyONFT_A, ProxyONFT
+    let ONFT_B, ONFT_C, LZEndpointMock, ONFT, ERC721, ERC721Src, ProxyONFT_A, ProxyONFT, LzLibFactory, lzLib
 
     before(async function () {
         owner = (await ethers.getSigners())[0]
         warlock = (await ethers.getSigners())[1]
-
+        LzLibFactory = await ethers.getContractFactory("LzLib")
+        lzLib = await LzLibFactory.deploy();
         LZEndpointMock = await ethers.getContractFactory("LZEndpointMock")
         ONFT = await ethers.getContractFactory("ONFT721")
         ProxyONFT = await ethers.getContractFactory("ProxyONFT721")
@@ -60,7 +61,7 @@ describe("ProxyONFT721: ", function () {
         expect(await ERC721Src.ownerOf(tokenId)).to.be.equal(owner.address)
 
         // token doesn't exist on other chain
-        await expect(ONFT_B.ownerOf(tokenId)).to.be.revertedWith("ERC721: operator query for nonexistent token")
+        await expect(ONFT_B.ownerOf(tokenId)).to.be.revertedWith("ERC721: owner query for nonexistent token")
 
         // can transfer token on srcChain as regular erC721
         await ERC721Src.transfer(warlock.address, tokenId)
@@ -98,7 +99,7 @@ describe("ProxyONFT721: ", function () {
         )
 
         // token is burned on the sending chain
-        await expect(ONFT_B.ownerOf(tokenId)).to.be.revertedWith("ERC721: operator query for nonexistent token")
+        await expect(ONFT_B.ownerOf(tokenId)).to.be.revertedWith("ERC721: owner query for nonexistent token")
 
         // token received on the dst chain
         expect(await ONFT_C.ownerOf(tokenId)).to.be.equal(warlock.address)
@@ -115,7 +116,7 @@ describe("ProxyONFT721: ", function () {
         )
 
         // token is burned on the sending chain
-        await expect(ONFT_C.ownerOf(tokenId)).to.be.revertedWith("ERC721: operator query for nonexistent token")
+        await expect(ONFT_C.ownerOf(tokenId)).to.be.revertedWith("ERC721: owner query for nonexistent token")
 
         // is received on the original chain
         expect(await ERC721Src.ownerOf(tokenId)).to.be.equal(warlock.address)
