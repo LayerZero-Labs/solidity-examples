@@ -38,14 +38,14 @@ In the event a chain goes rogue, Ethereum will be the final source of truth for 
 1. Add a .env file (to the root project directory) with your MNEMONIC="" and fund your wallet in order to deploy!
 2. Follow any of the tutorials below
 
-## BasedOFT.sol - an omnichain ERC20
+## BasedOFT20.sol - an omnichain ERC20
 
 > WARNING: **You must perform the setTrustedRemote() (step 2).**
 
 1. Deploy two contracts:  ```rinkeby``` is the `base` chain. Fuji is the oft for the other chain.
 ```angular2html
-npx hardhat --network rinkeby deploy --tags ExampleBasedOFT
-npx hardhat --network fuji deploy --tags ExampleOFT
+npx hardhat --network rinkeby deploy --tags ExampleBasedOFT20
+npx hardhat --network fuji deploy --tags ExampleOFT20
 ```
 2. Set the "trusted remotes" (ie: your contracts) so each of them can receive messages from one another, and `only` one another.
 ```angular2html

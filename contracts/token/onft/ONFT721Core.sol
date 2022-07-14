@@ -7,6 +7,11 @@ import "../../lzApp/NonblockingLzApp.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 
 abstract contract ONFT721Core is NonblockingLzApp, ERC165, IONFT721Core {
+
+    uint public constant NO_EXTRA_GAS = 0;
+    uint public constant FUNCTION_TYPE_SEND = 1;
+    bool public useCustomAdapterParams;
+
     constructor(address _lzEndpoint) NonblockingLzApp(_lzEndpoint) {}
 
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
@@ -27,14 +32,18 @@ abstract contract ONFT721Core is NonblockingLzApp, ERC165, IONFT721Core {
         _debitFrom(_from, _dstChainId, _toAddress, _tokenId);
 
         bytes memory payload = abi.encode(_toAddress, _tokenId);
+
+        if(useCustomAdapterParams) {
+            _checkGasLimit(_dstChainId, FUNCTION_TYPE_SEND, _adapterParams, NO_EXTRA_GAS);
+        } else {
+            require(_adapterParams.length == 0, "LzApp: _adapterParams must be empty.");
+        }
         _lzSend(_dstChainId, payload, _refundAddress, _zroPaymentAddress, _adapterParams);
 
-        uint64 nonce = lzEndpoint.getOutboundNonce(_dstChainId, address(this));
-        emit SendToChain(_from, _dstChainId, _toAddress, _tokenId, nonce);
+        emit SendToChain(_dstChainId, _from, _toAddress, _tokenId);
     }
 
-    function _nonblockingLzReceive(uint16 _srcChainId, bytes memory _srcAddress, uint64 _nonce, bytes memory _payload) internal virtual override {
-        // decode and load the toAddress
+    function _nonblockingLzReceive(uint16 _srcChainId, bytes memory _srcAddress, uint64 /*_nonce*/, bytes memory _payload) internal virtual override {
         (bytes memory toAddressBytes, uint tokenId) = abi.decode(_payload, (bytes, uint));
         address toAddress;
         assembly {
@@ -43,7 +52,11 @@ abstract contract ONFT721Core is NonblockingLzApp, ERC165, IONFT721Core {
 
         _creditTo(_srcChainId, toAddress, tokenId);
 
-        emit ReceiveFromChain(_srcChainId, _srcAddress, toAddress, tokenId, _nonce);
+        emit ReceiveFromChain(_srcChainId, _srcAddress, toAddress, tokenId);
+    }
+
+    function setUseCustomAdapterParams(bool _useCustomAdapterParams) external onlyOwner {
+        useCustomAdapterParams = _useCustomAdapterParams;
     }
 
     function _debitFrom(address _from, uint16 _dstChainId, bytes memory _toAddress, uint _tokenId) internal virtual;

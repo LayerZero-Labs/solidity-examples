@@ -1,7 +1,7 @@
 const { expect } = require("chai")
 const { ethers } = require("hardhat")
 
-describe("ProxyOFT: ", function () {
+describe("ProxyOFT20: ", function () {
     const chainId_A = 1
     const chainId_B = 2
     const chainId_C = 3
@@ -9,15 +9,14 @@ describe("ProxyOFT: ", function () {
     const symbol = "ONFT"
 
     let owner, warlock, lzEndpointMockA, lzEndpointMockB, lzEndpointMockC
-    let OFT_B, OFT_C, LZEndpointMock, OFT, ERC20, ERC20Src, ProxyOFT_A, ProxyOFT
+    let OFT_B, OFT_C, LZEndpointMock, OFT, ERC20, ERC20Src, ProxyOFT_A, ProxyOFT, LzLibFactory, lzLib
 
     before(async function () {
         owner = (await ethers.getSigners())[0]
         warlock = (await ethers.getSigners())[1]
-
         LZEndpointMock = await ethers.getContractFactory("LZEndpointMock")
-        OFT = await ethers.getContractFactory("OFT")
-        ProxyOFT = await ethers.getContractFactory("ProxyOFT")
+        OFT = await ethers.getContractFactory("OFT20")
+        ProxyOFT = await ethers.getContractFactory("ProxyOFT20")
         ERC20 = await ethers.getContractFactory("ERC20Mock")
     })
 

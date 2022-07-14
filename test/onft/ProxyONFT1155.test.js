@@ -8,12 +8,11 @@ describe("ProxyONFT1155: ", function () {
     const uri = "www.warlock.com"
 
     let owner, warlock, lzEndpointMockA, lzEndpointMockB, lzEndpointMockC
-    let ONFT_B, ONFT_C, LZEndpointMock, ONFT, ERC1155, ERC1155Src, ProxyONFT_A, ProxyONFT
+    let ONFT_B, ONFT_C, LZEndpointMock, ONFT, ERC1155, ERC1155Src, ProxyONFT_A, ProxyONFT, LzLibFactory, lzLib
 
     before(async function () {
         owner = (await ethers.getSigners())[0]
         warlock = (await ethers.getSigners())[1]
-
         LZEndpointMock = await ethers.getContractFactory("LZEndpointMock")
         ONFT = await ethers.getContractFactory("ONFT1155")
         ProxyONFT = await ethers.getContractFactory("ProxyONFT1155")

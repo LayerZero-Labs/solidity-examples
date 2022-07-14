@@ -1,21 +1,20 @@
 const { expect } = require("chai")
 const { ethers } = require("hardhat")
 
-describe("OFT: ", function () {
+describe("OFT20: ", function () {
     const chainIdSrc = 1
     const chainIdDst = 2
     const name = "OmnichainFungibleToken"
     const symbol = "OFT"
     const globalSupply = ethers.utils.parseUnits("1000000", 18)
 
-    let owner, lzEndpointSrcMock, lzEndpointDstMock, OFTSrc, OFTDst, LZEndpointMock, BasedOFT, OFT
+    let owner, lzEndpointSrcMock, lzEndpointDstMock, OFTSrc, OFTDst, LZEndpointMock, BasedOFT, OFT, LzLibFactory, lzLib
 
     before(async function () {
         owner = (await ethers.getSigners())[0]
-
         LZEndpointMock = await ethers.getContractFactory("LZEndpointMock")
-        BasedOFT = await ethers.getContractFactory("ExampleBasedOFT")
-        OFT = await ethers.getContractFactory("OFT")
+        BasedOFT = await ethers.getContractFactory("ExampleBasedOFT20")
+        OFT = await ethers.getContractFactory("OFT20")
     })
 
     beforeEach(async function () {
@@ -33,6 +32,10 @@ describe("OFT: ", function () {
         // set each contracts source address so it can send to each other
         await OFTSrc.setTrustedRemote(chainIdDst, OFTDst.address) // for A, set B
         await OFTDst.setTrustedRemote(chainIdSrc, OFTSrc.address) // for B, set A
+
+        //set destination min gas
+        await OFTSrc.setMinDstGasLookup(chainIdDst, parseInt(await OFTSrc.FUNCTION_TYPE_SEND()), 225000)
+        await OFTSrc.setUseCustomAdapterParams(true);
     })
 
     describe("setting up stored payload", async function () {

@@ -9,13 +9,13 @@ module.exports = async function (taskArgs, hre) {
     const dstChainId = CHAIN_ID[taskArgs.targetNetwork]
     const qty = ethers.utils.parseEther(taskArgs.qty)
 
-    let srcContractName = "ExampleOFT"
+    let srcContractName = "ExampleOFT20"
     let dstContractName = srcContractName
     if (taskArgs.targetNetwork == OFT_CONFIG.baseChain) {
-        dstContractName = "ExampleBasedOFT"
+        dstContractName = "ExampleBasedOFT20"
     }
     if (hre.network.name == OFT_CONFIG.baseChain) {
-        srcContractName = "ExampleBasedOFT"
+        srcContractName = "ExampleBasedOFT20"
     }
 
     // the destination contract address

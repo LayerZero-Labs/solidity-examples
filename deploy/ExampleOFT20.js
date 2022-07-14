@@ -12,7 +12,7 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
     const endpointAddr = LZ_ENDPOINTS[hre.network.name]
     console.log(`[${hre.network.name}] LayerZero Endpoint address: ${endpointAddr}`)
 
-    await deploy("ExampleOFT", {
+    await deploy("ExampleOFT20", {
         from: deployer,
         args: [endpointAddr],
         log: true,
@@ -20,4 +20,4 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
     })
 }
 
-module.exports.tags = ["ExampleOFT"]
+module.exports.tags = ["ExampleOFT20"]

@@ -8,7 +8,7 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
 
     console.log(`>>> your address: ${deployer}`)
 
-    if (hre.network.name != OFT_CONFIG.baseChain) {
+    if (hre.network.name !== OFT_CONFIG.baseChain) {
         console.log("*** Warning: Use [rinkeby] as the base chain for this example!")
         return
     }
@@ -18,7 +18,7 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
     const globalSupply = ethers.utils.parseUnits(OFT_CONFIG.globalSupply, 18)
     console.log(`[${hre.network.name}] LayerZero Endpoint address: ${endpointAddr}`)
 
-    await deploy("ExampleBasedOFT", {
+    await deploy("ExampleBasedOFT20", {
         from: deployer,
         args: [endpointAddr, globalSupply],
         log: true,
@@ -26,4 +26,4 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
     })
 }
 
-module.exports.tags = ["ExampleBasedOFT"]
+module.exports.tags = ["ExampleBasedOFT20"]

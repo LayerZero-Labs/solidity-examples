@@ -11,9 +11,10 @@ import "../interfaces/ILayerZeroEndpoint.sol";
  * a generic LzReceiver implementation
  */
 abstract contract LzApp is Ownable, ILayerZeroReceiver, ILayerZeroUserApplicationConfig {
-    ILayerZeroEndpoint public immutable lzEndpoint;
 
+    ILayerZeroEndpoint public immutable lzEndpoint;
     mapping(uint16 => bytes) public trustedRemoteLookup;
+    mapping(uint16 => mapping(uint => uint)) public minDstGasLookup;
 
     event SetTrustedRemote(uint16 _srcChainId, bytes _srcAddress);
 
@@ -39,6 +40,19 @@ abstract contract LzApp is Ownable, ILayerZeroReceiver, ILayerZeroUserApplicatio
         bytes memory trustedRemote = trustedRemoteLookup[_dstChainId];
         require(trustedRemote.length != 0, "LzApp: destination chain is not a trusted source");
         lzEndpoint.send{value: msg.value}(_dstChainId, trustedRemote, _payload, _refundAddress, _zroPaymentAddress, _adapterParams);
+    }
+
+    function _checkGasLimit(uint16 _dstChainId, uint _type, bytes memory _adapterParams, uint _extraGas) internal view {
+        uint providedGasLimit = getGasLimit(_adapterParams);
+        uint minGasLimit = minDstGasLookup[_dstChainId][_type] + _extraGas;
+        require(minGasLimit > 0, "LzApp: minGasLimit not set");
+        require(providedGasLimit >= minGasLimit, "LzApp: gas limit is too low");
+    }
+
+    function getGasLimit(bytes memory _adapterParams) public pure returns (uint gasLimit) {
+        assembly {
+            gasLimit := mload(add(_adapterParams, 34))
+        }
     }
 
     //---------------------------UserApplication config----------------------------------------
@@ -69,8 +83,12 @@ abstract contract LzApp is Ownable, ILayerZeroReceiver, ILayerZeroUserApplicatio
         emit SetTrustedRemote(_srcChainId, _srcAddress);
     }
 
-    //--------------------------- VIEW FUNCTION ----------------------------------------
+    function setMinDstGasLookup(uint16 _dstChainId, uint _type, uint _dstGasAmount) external onlyOwner {
+        require(_dstGasAmount > 0, "LzApp: invalid _dstGasAmount");
+        minDstGasLookup[_dstChainId][_type] = _dstGasAmount;
+    }
 
+    //--------------------------- VIEW FUNCTION ----------------------------------------
     function isTrustedRemote(uint16 _srcChainId, bytes calldata _srcAddress) external view returns (bool) {
         bytes memory trustedSource = trustedRemoteLookup[_srcChainId];
         return keccak256(trustedSource) == keccak256(_srcAddress);

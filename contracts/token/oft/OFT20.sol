@@ -4,15 +4,15 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
-import "./OFTCore.sol";
-import "./IOFT.sol";
+import "./IOFT20.sol";
+import "./OFT20Core.sol";
 
 // override decimal() function is needed
-contract OFT is OFTCore, ERC20, IOFT {
-    constructor(string memory _name, string memory _symbol, address _lzEndpoint) ERC20(_name, _symbol) OFTCore(_lzEndpoint) {}
+contract OFT20 is OFT20Core, ERC20, IOFT20 {
+    constructor(string memory _name, string memory _symbol, address _lzEndpoint) ERC20(_name, _symbol) OFT20Core(_lzEndpoint) {}
 
-    function supportsInterface(bytes4 interfaceId) public view virtual override(OFTCore, IERC165) returns (bool) {
-        return interfaceId == type(IOFT).interfaceId || interfaceId == type(IERC20).interfaceId || super.supportsInterface(interfaceId);
+    function supportsInterface(bytes4 interfaceId) public view virtual override(OFT20Core, IERC165) returns (bool) {
+        return interfaceId == type(IOFT20).interfaceId || interfaceId == type(IERC20).interfaceId || super.supportsInterface(interfaceId);
     }
 
     function circulatingSupply() public view virtual override returns (uint) {
