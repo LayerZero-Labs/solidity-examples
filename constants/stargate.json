@@ -1,0 +1,25 @@
+{
+  "router":{
+    "rinkeby": "0x82A0F5F531F9ce0df1DF5619f74a0d3fA31FF561",
+    "bsc-testnet": "0xbB0f1be1E9CE9cB27EA5b0c3a85B7cc3381d8176",
+    "fuji": "0x13093E05Eb890dfA6DacecBdE51d24DabAb2Faa1",
+    "mumbai": "0x817436a076060D158204d955E5403b6Ed0A5fac0",
+    "arbitrum-rinkeby": "0x6701D9802aDF674E524053bd44AA83ef253efc41",
+    "optimism-kovan": "0xCC68641528B948642bDE1729805d6cf1DECB0B00",
+    "fantom-testnet": "0xa73b0a56B29aD790595763e71505FCa2c1abb77f"
+  },
+  "routerETH": {
+    "rinkeby": "0x2D57DbE0CFbe17FE654a0EBA64dF6a57ee389008",
+    "arbitrum-rinkeby": "0x7f9246106c33ECF3379D2be4664042349284f605",
+    "optimism-kovan": "0x8637D51086D1a7A9d25b8dc233551C54fF8Ee49A"
+  },
+  "factory": {
+    "rinkeby": "0xa8CE68CfB645eaBd2c03d4B7129Cae8122930aC3",
+    "bsc-testnet": "0x407210a67cDAe7Aa09E4426109329cd3E90aFe47",
+    "fuji": "0x439C197429036423d42631181afAC655b19972e5",
+    "mumbai": "0x43c3a5348671D868ED9dD9BFDb2859bE984d262e",
+    "arbitrum-rinkeby": "0x5f1daEe0Eb4c237635f970f132B28BD71fd618C9",
+    "optimism-kovan": "0xF22293462b6551C818190F1EC67Ed80c18E4cDb4",
+    "fantom-testnet": "0xEa2aC81591de47ab33408D48c22b10D24AAD6F0F"
+  }
+}

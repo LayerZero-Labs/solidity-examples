@@ -106,6 +106,17 @@ task(
 //     .addOptionalParam("contract", "the contract to delete and redeploy")
 //     .addOptionalParam("ignore", "csv of network names to ignore", "", types.string)
 
+task('routerAddLiquidityETH', 'addLiquidityETH to the V2 Router', require('./routerAddLiquidityETH'))
+    .addParam('router', 'the router address')
+    .addParam('token', 'the token address')
+
+task('swapNativeForNative', 'swap native on one chain thru StargateComposed to native on another chainr', require('./swapNativeForNative'))
+    .addParam('targetNetwork', 'the destination network name')
+    .addParam('bridgeToken', 'the address of the token that will be bridged (the pools token)')
+    .addParam('srcPoolId', 'the poolId to bridge')
+    .addParam('dstPoolId', 'the poolId to bridge')
+    .addParam('qty', 'the quanitty of native to swap in')
+
 task("pingPongSetTrustedRemote", "set the trusted remote", require("./pingPongSetTrustedRemote")).addParam(
     "targetNetwork",
     "the targetNetwork to set as trusted"
@@ -150,3 +161,16 @@ task("deployWireCheck", "", require("./deployWireCheck"))
     .addOptionalParam("proxyChain", "")
     .addOptionalParam("proxyContract", "")
 
+task("WireProxyOft", "wire some proxy oft", require("./WireProxyOft"))
+
+// uint qty,
+// address bridgeToken,                    // the address of the native ERC20 to swap() - *must* be the token for the poolId
+// uint16 dstChainId,                      // Stargate/LayerZero chainId
+// uint16 srcPoolId,                       // stargate poolId - *must* be the poolId for the qty asset
+// uint16 dstPoolId,                       // stargate destination poolId
+task("stargateSwap", "", require('./stargateSwap'))
+    .addParam("qty","")
+    .addParam("bridgeToken","")
+    .addParam("targetNetwork","")
+    .addParam("srcPoolId","")
+    .addParam("dstPoolId","")
