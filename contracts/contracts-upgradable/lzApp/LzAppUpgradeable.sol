@@ -2,24 +2,28 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "../interfaces/ILayerZeroReceiver.sol";
-import "../interfaces/ILayerZeroUserApplicationConfig.sol";
-import "../interfaces/ILayerZeroEndpoint.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "../interfaces/ILayerZeroReceiverUpgradeable.sol";
+import "../interfaces/ILayerZeroUserApplicationConfigUpgradeable.sol";
+import "../interfaces/ILayerZeroEndpointUpgradeable.sol";
 
 /*
  * a generic LzReceiver implementation
  */
-abstract contract LzApp is Ownable, ILayerZeroReceiver, ILayerZeroUserApplicationConfig {
+abstract contract LzAppUpgradeable is Initializable, OwnableUpgradeable, ILayerZeroReceiverUpgradeable, ILayerZeroUserApplicationConfigUpgradeable {
 
-    ILayerZeroEndpoint public immutable lzEndpoint;
+    ILayerZeroEndpointUpgradeable public lzEndpoint;
     mapping(uint16 => bytes) public trustedRemoteLookup;
     mapping(uint16 => mapping(uint => uint)) public minDstGasLookup;
 
     event SetTrustedRemote(uint16 _srcChainId, bytes _srcAddress);
 
-    constructor(address _endpoint) {
-        lzEndpoint = ILayerZeroEndpoint(_endpoint);
+    function __LzAppUpgradeable_init(address _endpoint) internal onlyInitializing {
+        __LzAppUpgradeable_init_unchained(_endpoint);
+    }
+
+    function __LzAppUpgradeable_init_unchained(address _endpoint) internal onlyInitializing {
+        lzEndpoint = ILayerZeroEndpointUpgradeable(_endpoint);
     }
 
     function lzReceive(uint16 _srcChainId, bytes memory _srcAddress, uint64 _nonce, bytes memory _payload) public virtual override {
@@ -93,4 +97,11 @@ abstract contract LzApp is Ownable, ILayerZeroReceiver, ILayerZeroUserApplicatio
         bytes memory trustedSource = trustedRemoteLookup[_srcChainId];
         return keccak256(trustedSource) == keccak256(_srcAddress);
     }
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[50] private __gap;
 }

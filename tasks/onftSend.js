@@ -19,7 +19,7 @@ module.exports = async function (taskArgs, hre) {
                 tokenId,
                 owner.address,
                 ethers.constants.AddressZero,
-                adapterParams,
+                "0x",
                 {
                     value: ethers.utils.parseEther("1"),
                 }
