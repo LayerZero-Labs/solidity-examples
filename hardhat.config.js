@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 require('hardhat-contract-sizer');
+require('@nomiclabs/hardhat-etherscan');
 require("@nomiclabs/hardhat-waffle");
 require("solidity-coverage");
 require('hardhat-gas-reporter');
@@ -117,6 +118,18 @@ module.exports = {
       chainId: 4002,
       accounts: accounts(),
     }
-  }
+  },
 
-};
+  // https://hardhat.org/plugins/nomiclabs-hardhat-etherscan#multiple-api-keys-and-alternative-block-explorers
+    etherscan: {
+      apiKey: {
+        rinkeby: process.env.ETHERSCAN_API_KEY,
+        bscTestnet: process.env.BSCSCAN_API_KEY,
+        polygonMumbai: process.env.POLYGON_API_KEY,
+        avalancheFujiTestnet: process.env.AVALANCHE_API_KEY,
+        arbitrumTestnet: process.env.ARBITRUM_API_KEY,
+        optimisticKovan: process.env.OPTIMISTIC_API_KEY,
+        ftmTestnet: process.env.FANTOM_API_KEY
+      }
+    }
+} 

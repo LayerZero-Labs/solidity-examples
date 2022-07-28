@@ -1,0 +1,29 @@
+{
+  "bsc-testnet": {
+    "name": "AdvancedONFT (BSCT)",
+    "symbol": "AONFT",
+    "startMintId": 0,
+    "endMintId": 10,
+    "maxTokensPerMint": 5,
+    "baseTokenURI": "BSCTTokenURI",
+    "hiddenURI": "BSCTHiddenURI"
+  },
+  "fuji": {
+    "name": "AdvancedONFT (Fuji)",
+    "symbol": "AONFT",
+    "startMintId": 10,
+    "endMintId": 20,
+    "maxTokensPerMint": 5,
+    "baseTokenURI": "FujiTokenURI",
+    "hiddenURI": "FujiHiddenURI"
+  },
+  "rinkeby": {
+    "name": "AdvancedONFT (Rinkeby)",
+    "symbol": "AONFT",
+    "startMintId": 20,
+    "endMintId": 30,
+    "maxTokensPerMint": 5,
+    "baseTokenURI": "RinkebyTokenURI",
+    "hiddenURI": "RinkebyHiddenURI"
+  }
+}

@@ -65,6 +65,50 @@ task("onftSend", "send an ONFT nftId from one chain to another", require("./onft
     .addParam("targetNetwork", "the chainId to transfer to")
     .addParam("tokenId", "the tokenId of ONFT")
 
+//
+task(
+    "aonftSetTrustedRemote",
+    "setTrustedRemote(chainId, sourceAddr) to allow the local contract to send/receive messages from known source contracts",
+    require("./aonftSetTrustedRemote")
+).addParam("targetNetwork", "the target network to let this instance receive messages from")
+
+//
+task("aonftStartSale", "flipSaleStarted() and fliPublicSaleStarted() to open up the sale ", require("./aonftStartSale"))
+
+//
+task("aonftWithdraw", "withdraw() to withdraw ETH from the contract to the beneficiary ", require("./aonftWithdraw"))
+
+//
+task("aonftReveal", "flipRevealed() to reveal the metadata of the ONFT", require("./aonftReveal"))
+
+//
+task(
+    "aonftSetBeneficiary",
+    "setBeneficiary(beneficiary) to set a new beneficiary for receiving royalties and ETH withdrawals",
+    require("./aonftSetBeneficiary")
+).addParam("beneficiary", "adress of the new beneficiary")
+
+task(
+    "aonftSetPrice",
+    "setPrice(price) to set a new price for the mint",
+    require("./aonftSetPrice")
+).addParam("price", "new price of the mint")
+
+//
+task(
+    "aonftPublicMint",
+    "publicMint(quantity) to mint a certain amount of ONFTs once the public sale is open ",
+    require("./aonftPublicMint")
+).addParam("quantity", "amount of ONFTs that you want to mint")
+
+//
+task("aonftSend", "send an ONFT nftId from one chain to another", require("./aonftSend"))
+    .addParam("targetNetwork", "the chainId to transfer to")
+    .addParam("tokenId", "the tokenId of ONFT")
+
+//
+task("aonftSetWhitelist", "sets a hard-coded allowlist for the private sale", require("./aonftSetWhitelist"))
+
 // npx hardhat checkWireUp --e testnet --contract OmniCounter
 task("checkWireUp", "check wire up", require("./checkWireUp"))
     .addParam("e", "environment testnet/mainet")
