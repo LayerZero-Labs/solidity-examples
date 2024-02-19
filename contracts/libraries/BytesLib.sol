@@ -35,7 +35,7 @@ library BytesLib {
                 // 32 bytes into its memory.
                 let cc := add(_preBytes, 0x20)
             } lt(mc, end) {
-                // Increase both counters by 32 bytes each iteration.
+                // Increase both counters by 32 bytes for each iteration.
                 mc := add(mc, 0x20)
                 cc := add(cc, 0x20)
             } {

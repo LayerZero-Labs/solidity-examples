@@ -8,7 +8,7 @@ import "../interfaces/IOFTV2.sol";
 import "../interfaces/IOFTReceiverV2.sol";
 import "../../../../libraries/BytesLib.sol";
 
-// OFTStakingMock is an example to integrate with OFT. It shows how to send OFT cross chain with a custom payload and
+// OFTStakingMock is an example of integrating with OFT. It shows how to send OFT cross chain with a custom payload and
 // call a receiver contract on the destination chain when oft is received.
 contract OFTStakingMockV2 is IOFTReceiverV2 {
     using SafeERC20 for IERC20;
