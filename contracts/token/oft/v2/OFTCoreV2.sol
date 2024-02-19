@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 import "../../../lzApp/NonblockingLzApp.sol";
-import "../../../libraries/ExcessivelySafeCall.sol";
+//import "../../../libraries/ExcessivelySafeCall.sol"; already imported in NonblockingLzApp
 import "./interfaces/ICommonOFT.sol";
 import "./interfaces/IOFTReceiverV2.sol";
 
@@ -248,7 +248,7 @@ abstract contract OFTCoreV2 is NonblockingLzApp {
     function _decodeSendPayload(bytes memory _payload) internal view virtual returns (address to, uint64 amountSD) {
         require(_payload.toUint8(0) == PT_SEND && _payload.length == 41, "OFTCore: invalid payload");
 
-        to = _payload.toAddress(13); // drop the first 12 bytes of bytes32
+        to = _payload.toAddress(1); // drop the first 1 bytes of _payload to get address  
         amountSD = _payload.toUint64(33);
     }
 
