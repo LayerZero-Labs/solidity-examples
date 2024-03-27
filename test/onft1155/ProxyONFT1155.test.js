@@ -358,7 +358,7 @@ describe("ProxyONFT1155: ", function () {
         let nativeFee = (await ProxyONFT_A.estimateSendBatchFee(chainId_B, warlock.address, tokenIds.slice(1), amounts.slice(1), false, "0x"))
             .nativeFee
 
-        // swaps tokens to other chain in seperate batches
+        // swaps tokens to other chain in separate batches
         await ProxyONFT_A.connect(warlock).sendBatchFrom(
             warlock.address,
             chainId_B,

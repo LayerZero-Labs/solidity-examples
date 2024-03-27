@@ -32,7 +32,7 @@ contract LZEndpointMock is ILayerZeroEndpoint {
     uint public oracleFee;
     bytes public defaultAdapterParams;
 
-    // path = remote addrss + local address
+    // path = remote address + local address
     // inboundNonce = [srcChainId][path].
     mapping(uint16 => mapping(bytes => uint64)) public inboundNonce;
     //todo: this is a hack
