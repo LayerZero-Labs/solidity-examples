@@ -110,7 +110,7 @@ Many of the example contracts make use of `LayerZeroEndpointMock.sol` which is a
 ## About OFTV1.2
 
 ```text
-NOTE: the OFTV1.2 uses uint64 to encode value transfer for compatability of Aptos and Solana. 
+NOTE: the OFTV1.2 uses uint64 to encode value transfer for compatibility of Aptos and Solana. 
 
 The deployer is expected to set a lower decimal points like 6 or 8. 
 
