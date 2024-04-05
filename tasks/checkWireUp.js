@@ -3,6 +3,7 @@ const environments = require("../constants/environments.json")
 
 function TrustedRemoteTestnet() {
     this.goerli
+    this.sepolia
     this.bscTestnet
     this.fuji
     this.mumbai
