@@ -8,7 +8,7 @@ module.exports = async function (taskArgs, hre) {
     const pingPong = await ethers.getContract("PingPong")
     console.log(`[source] pingPong.address: ${pingPong.address}`)
 
-    let tx = await (await pingPong.setTrustedRemote(dstChainId, dstPingPongAddr)).wait()
+    let tx = await (await pingPong.setTrustedRemoteAddress(dstChainId, dstPingPongAddr)).wait()
     console.log(`✅ [${hre.network.name}] PingPong.setTrustedRemote( ${dstChainId}, ${dstPingPongAddr} )`)
     console.log(`...tx: ${tx.transactionHash}`)
 }
