@@ -20,7 +20,7 @@ abstract contract Fee is Ownable {
     event SetDefaultFeeBp(uint16 feeBp);
     event SetFeeOwner(address feeOwner);
 
-    constructor(){
+    constructor() Ownable(_msgSender()){
         feeOwner = owner();
     }
 
