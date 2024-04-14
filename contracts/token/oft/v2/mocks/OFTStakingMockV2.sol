@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "../interfaces/IOFTV2.sol";
+import "../interfaces/IBaseOFTV2.sol";
 import "../interfaces/IOFTReceiverV2.sol";
 import "../../../../libraries/BytesLib.sol";
 
@@ -21,7 +21,7 @@ contract OFTStakingMockV2 is IOFTReceiverV2 {
     // ... other types
 
     // variables
-    IOFTV2 public oft;
+    IBaseOFTV2 public oft;
     mapping(uint16 => bytes32) public remoteStakingContracts;
     mapping(address => uint) public balances;
     bool public paused; // for testing try/catch
@@ -32,7 +32,7 @@ contract OFTStakingMockV2 is IOFTReceiverV2 {
 
     // _oft can be any composable OFT contract, e.g. ComposableOFT, ComposableBasedOFT and ComposableProxyOFT.
     constructor(address _oft) {
-        oft = IOFTV2(_oft);
+        oft = IBaseOFTV2(_oft);
         IERC20(oft.token()).safeApprove(_oft, type(uint).max);
     }
 
