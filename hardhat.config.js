@@ -148,6 +148,11 @@ module.exports = {
             chainId: 5,
             accounts: accounts(),
         },
+        sepolia: {
+            url: "https://rpc.sepolia.ethpandaops.io",
+            chainId: 11155111,
+            accounts: accounts(),
+          },
         "bsc-testnet": {
             url: "https://data-seed-prebsc-1-s1.binance.org:8545/",
             chainId: 97,

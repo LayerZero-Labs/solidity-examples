@@ -8,6 +8,7 @@ const MAX_TRYS = 10
 
 function TrustedRemoteTestnet() {
     this.goerli
+    this.sepolia
     this.bscTestnet
     this.fuji
     this.mumbai
